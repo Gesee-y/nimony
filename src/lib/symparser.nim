@@ -176,13 +176,17 @@ proc splitLocalSymName*(s: string; basename: var string;
 proc removeModule*(s: string): string =
   # From "abc.12.Mod132a3bc" extract "abc.12".
   # From "abc.12" extract "abc.12".
+  # From "abc.12.13Mod" extract "abc.12"
   var i = s.len - 2
+  var isModule = false
   while i > 0:
     if s[i] == '.':
-      if s[i+1] in {'0'..'9'}:
-        return s
-      else:
+      if isModule:
         return substr(s, 0, i-1)
+      break
+    elif s[i] notin {'0'..'9'}:
+      isModule = true
+
     dec i
   return s
 
